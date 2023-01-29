@@ -1,0 +1,74 @@
+#!/usr/bin/bash
+export LC_COLLATE=C
+shopt -s extglob
+
+
+echo Welcome to our SQL Database
+
+select key in "CreateDB" "ListDB" "ConnectDB" "DropDB" "Exit"
+do
+case $key in
+"CreateDB")
+	read -p "Create Database name " DBname
+	case $DBname in
+	+([a-zA-Z_]))
+		if [ -e ./SQLDatabase/$DBname ]
+		then
+		echo  $DBname Already Created
+		else
+		mkdir ./SQLDatabase/$DBname
+		echo welcome $DBname
+		fi
+		;;
+		*)
+	echo Choose a suitable name
+	;;
+	esac
+;;
+"ListDB")
+	ls -F ./SQLDatabase | grep /$
+;;
+"ConnectDB")
+	read -p "write the name of the DB to connect " DBname
+	case $DBname in
+	+([a-zA-Z_]))
+		if [ -e ./SQLDatabase/$DBname ]
+		then
+		echo Connected to $DBname
+		export DBname
+		sh ./TableScript
+
+	
+		
+		else
+		echo wrong Database name
+		fi
+		;;
+		*)
+	echo wrong format
+	;;
+	esac
+;;
+"DropDB")
+	read -p "write the name of the DB to Delete " DBname
+	case $DBname in
+	+([a-zA-Z_]))
+		if [ -e ./SQLDatabase/$DBname ]
+		then
+		rm -r ./SQLDatabase/$DBname
+		echo $DBname removed
+		else
+		echo wrong Database name
+		fi
+		;;
+		*)
+	echo wrong format
+	;;
+	esac
+;;
+"Exit")
+break;
+;;
+
+esac
+done
